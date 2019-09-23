@@ -1,0 +1,173 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Schema Namespace="FineArtModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+  <EntityType Name="Awards">
+    <Key>
+      <PropertyRef Name="AwardId" />
+    </Key>
+    <Property Name="AwardId" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="AwardName" Type="varchar" MaxLength="50" Nullable="false" />
+    <Property Name="AwardDetail" Type="varchar" MaxLength="500" Nullable="false" />
+  </EntityType>
+  <EntityType Name="Competitions">
+    <Key>
+      <PropertyRef Name="CompetitionId" />
+    </Key>
+    <Property Name="CompetitionId" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="CompetitionName" Type="varchar" MaxLength="50" Nullable="false" />
+    <Property Name="StartDate" Type="date" Nullable="false" />
+    <Property Name="EndDate" Type="date" Nullable="false" />
+    <Property Name="UserId" Type="int" Nullable="false" />
+    <Property Name="AwardId" Type="int" Nullable="false" />
+  </EntityType>
+  <EntityType Name="ExhibitionPosting">
+    <Key>
+      <PropertyRef Name="PostingId" />
+      <PropertyRef Name="ExhibitionId" />
+    </Key>
+    <Property Name="PostingId" Type="int" Nullable="false" />
+    <Property Name="ExhibitionId" Type="int" Nullable="false" />
+  </EntityType>
+  <EntityType Name="Exhibitions">
+    <Key>
+      <PropertyRef Name="ExhibitionId" />
+    </Key>
+    <Property Name="ExhibitionId" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="ExhibitionName" Type="varchar" MaxLength="50" Nullable="false" />
+  </EntityType>
+  <EntityType Name="Postings">
+    <Key>
+      <PropertyRef Name="PostingId" />
+    </Key>
+    <Property Name="PostingId" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="Mark" Type="float" Nullable="false" />
+    <Property Name="Quote" Type="varchar" MaxLength="500" Nullable="false" />
+    <Property Name="LastEdit" Type="datetime" Nullable="false" />
+    <Property Name="ImagePath" Type="varchar" MaxLength="100" Nullable="false" />
+    <Property Name="UserId" Type="int" Nullable="false" />
+    <Property Name="CompetitionId" Type="int" Nullable="false" />
+    <Property Name="isActive" Type="bit" Nullable="false" />
+  </EntityType>
+  <EntityType Name="Roles">
+    <Key>
+      <PropertyRef Name="RoleId" />
+    </Key>
+    <Property Name="RoleId" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="RoleName" Type="varchar" MaxLength="50" Nullable="false" />
+  </EntityType>
+  <EntityType Name="Users">
+    <Key>
+      <PropertyRef Name="UserId" />
+    </Key>
+    <Property Name="UserId" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="Username" Type="varchar" MaxLength="50" Nullable="false" />
+    <Property Name="Password" Type="varchar" MaxLength="300" Nullable="false" />
+    <Property Name="YearOfBirth" Type="nchar" MaxLength="10" Nullable="false" />
+    <Property Name="RoleId" Type="int" Nullable="false" />
+    <Property Name="Address" Type="varchar" MaxLength="100" Nullable="false" />
+  </EntityType>
+  <Association Name="FK_Competitions_Awards">
+    <End Role="Awards" Type="Self.Awards" Multiplicity="1" />
+    <End Role="Competitions" Type="Self.Competitions" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Awards">
+        <PropertyRef Name="AwardId" />
+      </Principal>
+      <Dependent Role="Competitions">
+        <PropertyRef Name="AwardId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_ExhibitionPosting_Exhibitions">
+    <End Role="Exhibitions" Type="Self.Exhibitions" Multiplicity="1" />
+    <End Role="ExhibitionPosting" Type="Self.ExhibitionPosting" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Exhibitions">
+        <PropertyRef Name="ExhibitionId" />
+      </Principal>
+      <Dependent Role="ExhibitionPosting">
+        <PropertyRef Name="ExhibitionId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_ExhibitionPosting_Postings">
+    <End Role="Postings" Type="Self.Postings" Multiplicity="1" />
+    <End Role="ExhibitionPosting" Type="Self.ExhibitionPosting" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Postings">
+        <PropertyRef Name="PostingId" />
+      </Principal>
+      <Dependent Role="ExhibitionPosting">
+        <PropertyRef Name="PostingId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_Postings_Competitions">
+    <End Role="Competitions" Type="Self.Competitions" Multiplicity="1" />
+    <End Role="Postings" Type="Self.Postings" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Competitions">
+        <PropertyRef Name="CompetitionId" />
+      </Principal>
+      <Dependent Role="Postings">
+        <PropertyRef Name="CompetitionId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_Postings_Users1">
+    <End Role="Users" Type="Self.Users" Multiplicity="1" />
+    <End Role="Postings" Type="Self.Postings" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Users">
+        <PropertyRef Name="UserId" />
+      </Principal>
+      <Dependent Role="Postings">
+        <PropertyRef Name="UserId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_Users_Roles">
+    <End Role="Roles" Type="Self.Roles" Multiplicity="1" />
+    <End Role="Users" Type="Self.Users" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Roles">
+        <PropertyRef Name="RoleId" />
+      </Principal>
+      <Dependent Role="Users">
+        <PropertyRef Name="RoleId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <EntityContainer Name="FineArtModelStoreContainer">
+    <EntitySet Name="Awards" EntityType="Self.Awards" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="Competitions" EntityType="Self.Competitions" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="ExhibitionPosting" EntityType="Self.ExhibitionPosting" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="Exhibitions" EntityType="Self.Exhibitions" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="Postings" EntityType="Self.Postings" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="Roles" EntityType="Self.Roles" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="Users" EntityType="Self.Users" Schema="dbo" store:Type="Tables" />
+    <AssociationSet Name="FK_Competitions_Awards" Association="Self.FK_Competitions_Awards">
+      <End Role="Awards" EntitySet="Awards" />
+      <End Role="Competitions" EntitySet="Competitions" />
+    </AssociationSet>
+    <AssociationSet Name="FK_ExhibitionPosting_Exhibitions" Association="Self.FK_ExhibitionPosting_Exhibitions">
+      <End Role="Exhibitions" EntitySet="Exhibitions" />
+      <End Role="ExhibitionPosting" EntitySet="ExhibitionPosting" />
+    </AssociationSet>
+    <AssociationSet Name="FK_ExhibitionPosting_Postings" Association="Self.FK_ExhibitionPosting_Postings">
+      <End Role="Postings" EntitySet="Postings" />
+      <End Role="ExhibitionPosting" EntitySet="ExhibitionPosting" />
+    </AssociationSet>
+    <AssociationSet Name="FK_Postings_Competitions" Association="Self.FK_Postings_Competitions">
+      <End Role="Competitions" EntitySet="Competitions" />
+      <End Role="Postings" EntitySet="Postings" />
+    </AssociationSet>
+    <AssociationSet Name="FK_Postings_Users1" Association="Self.FK_Postings_Users1">
+      <End Role="Users" EntitySet="Users" />
+      <End Role="Postings" EntitySet="Postings" />
+    </AssociationSet>
+    <AssociationSet Name="FK_Users_Roles" Association="Self.FK_Users_Roles">
+      <End Role="Roles" EntitySet="Roles" />
+      <End Role="Users" EntitySet="Users" />
+    </AssociationSet>
+  </EntityContainer>
+</Schema>

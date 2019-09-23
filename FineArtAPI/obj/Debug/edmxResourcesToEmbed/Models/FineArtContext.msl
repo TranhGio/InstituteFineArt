@@ -1,0 +1,76 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
+  <EntityContainerMapping StorageEntityContainer="FineArtModelStoreContainer" CdmEntityContainer="FineArtEntities">
+    <EntitySetMapping Name="Awards">
+      <EntityTypeMapping TypeName="FineArtModel.Award">
+        <MappingFragment StoreEntitySet="Awards">
+          <ScalarProperty Name="AwardId" ColumnName="AwardId" />
+          <ScalarProperty Name="AwardName" ColumnName="AwardName" />
+          <ScalarProperty Name="AwardDetail" ColumnName="AwardDetail" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="Competitions">
+      <EntityTypeMapping TypeName="FineArtModel.Competition">
+        <MappingFragment StoreEntitySet="Competitions">
+          <ScalarProperty Name="CompetitionId" ColumnName="CompetitionId" />
+          <ScalarProperty Name="CompetitionName" ColumnName="CompetitionName" />
+          <ScalarProperty Name="StartDate" ColumnName="StartDate" />
+          <ScalarProperty Name="EndDate" ColumnName="EndDate" />
+          <ScalarProperty Name="UserId" ColumnName="UserId" />
+          <ScalarProperty Name="AwardId" ColumnName="AwardId" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="Exhibitions">
+      <EntityTypeMapping TypeName="FineArtModel.Exhibition">
+        <MappingFragment StoreEntitySet="Exhibitions">
+          <ScalarProperty Name="ExhibitionId" ColumnName="ExhibitionId" />
+          <ScalarProperty Name="ExhibitionName" ColumnName="ExhibitionName" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="Postings">
+      <EntityTypeMapping TypeName="FineArtModel.Posting">
+        <MappingFragment StoreEntitySet="Postings">
+          <ScalarProperty Name="PostingId" ColumnName="PostingId" />
+          <ScalarProperty Name="Mark" ColumnName="Mark" />
+          <ScalarProperty Name="Quote" ColumnName="Quote" />
+          <ScalarProperty Name="LastEdit" ColumnName="LastEdit" />
+          <ScalarProperty Name="ImagePath" ColumnName="ImagePath" />
+          <ScalarProperty Name="UserId" ColumnName="UserId" />
+          <ScalarProperty Name="CompetitionId" ColumnName="CompetitionId" />
+          <ScalarProperty Name="isActive" ColumnName="isActive" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="Roles">
+      <EntityTypeMapping TypeName="FineArtModel.Role">
+        <MappingFragment StoreEntitySet="Roles">
+          <ScalarProperty Name="RoleId" ColumnName="RoleId" />
+          <ScalarProperty Name="RoleName" ColumnName="RoleName" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="Users">
+      <EntityTypeMapping TypeName="FineArtModel.User">
+        <MappingFragment StoreEntitySet="Users">
+          <ScalarProperty Name="UserId" ColumnName="UserId" />
+          <ScalarProperty Name="Username" ColumnName="Username" />
+          <ScalarProperty Name="Password" ColumnName="Password" />
+          <ScalarProperty Name="YearOfBirth" ColumnName="YearOfBirth" />
+          <ScalarProperty Name="RoleId" ColumnName="RoleId" />
+          <ScalarProperty Name="Address" ColumnName="Address" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <AssociationSetMapping Name="ExhibitionPosting" TypeName="FineArtModel.ExhibitionPosting" StoreEntitySet="ExhibitionPosting">
+      <EndProperty Name="Exhibitions">
+        <ScalarProperty Name="ExhibitionId" ColumnName="ExhibitionId" />
+      </EndProperty>
+      <EndProperty Name="Postings">
+        <ScalarProperty Name="PostingId" ColumnName="PostingId" />
+      </EndProperty>
+    </AssociationSetMapping>
+  </EntityContainerMapping>
+</Mapping>
