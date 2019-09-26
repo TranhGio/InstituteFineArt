@@ -7,11 +7,13 @@ using System.Linq;
 using System.Net;
 using System.Net.Http;
 using System.Web.Http;
+using System.Web.Http.Cors;
 using System.Web.Http.Description;
 using FineArtAPI.Models;
 
 namespace FineArtAPI.Controllers
 {
+    [Authorize]
     public class PostingsController : ApiController
     {
         private FineArtEntities db = new FineArtEntities();
@@ -39,7 +41,8 @@ namespace FineArtAPI.Controllers
         [ResponseType(typeof(void))]
         public IHttpActionResult PutPosting(int id, Posting posting)
         {
-            if (!ModelState.IsValid)
+            User user = db.Users.Where(u => u.Username == User.Identity.Name).FirstOrDefault();
+            if (!ModelState.IsValid || user.UserId != 4)
             {
                 return BadRequest(ModelState);
             }
@@ -74,7 +77,8 @@ namespace FineArtAPI.Controllers
         [ResponseType(typeof(Posting))]
         public IHttpActionResult PostPosting(Posting posting)
         {
-            if (!ModelState.IsValid)
+            User user = db.Users.Where(u => u.Username == User.Identity.Name).FirstOrDefault();
+            if (!ModelState.IsValid || user.RoleId != 4)
             {
                 return BadRequest(ModelState);
             }
@@ -89,15 +93,20 @@ namespace FineArtAPI.Controllers
         [ResponseType(typeof(Posting))]
         public IHttpActionResult DeletePosting(int id)
         {
+            User user = db.Users.Where(u => u.Username == User.Identity.Name).FirstOrDefault();
+            if (user.RoleId == 2 || user.RoleId == 1)
+            {
+                BadRequest();
+            }
             Posting posting = db.Postings.Find(id);
             if (posting == null)
             {
                 return NotFound();
             }
-
-            db.Postings.Remove(posting);
+            
+            posting.isActive = false;
+            //db.Postings.Remove(posting);
             db.SaveChanges();
-
             return Ok(posting);
         }
 

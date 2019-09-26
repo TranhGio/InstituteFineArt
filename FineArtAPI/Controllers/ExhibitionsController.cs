@@ -7,11 +7,13 @@ using System.Linq;
 using System.Net;
 using System.Net.Http;
 using System.Web.Http;
+using System.Web.Http.Cors;
 using System.Web.Http.Description;
 using FineArtAPI.Models;
 
 namespace FineArtAPI.Controllers
 {
+    [Authorize]
     public class ExhibitionsController : ApiController
     {
         private FineArtEntities db = new FineArtEntities();
@@ -39,7 +41,8 @@ namespace FineArtAPI.Controllers
         [ResponseType(typeof(void))]
         public IHttpActionResult PutExhibition(int id, Exhibition exhibition)
         {
-            if (!ModelState.IsValid)
+            User user = db.Users.Where(u => u.Username == User.Identity.Name).FirstOrDefault();
+            if (!ModelState.IsValid || user.RoleId != 2 )
             {
                 return BadRequest(ModelState);
             }
@@ -74,7 +77,9 @@ namespace FineArtAPI.Controllers
         [ResponseType(typeof(Exhibition))]
         public IHttpActionResult PostExhibition(Exhibition exhibition)
         {
-            if (!ModelState.IsValid)
+            User user = db.Users.Where(u => u.Username == User.Identity.Name).FirstOrDefault();
+
+            if (!ModelState.IsValid || user.RoleId!= 2)
             {
                 return BadRequest(ModelState);
             }
@@ -89,6 +94,11 @@ namespace FineArtAPI.Controllers
         [ResponseType(typeof(Exhibition))]
         public IHttpActionResult DeleteExhibition(int id)
         {
+            User user = db.Users.Where(u => u.Username == User.Identity.Name).FirstOrDefault();
+            if(user.RoleId != 2)
+            {
+                return BadRequest();
+            }
             Exhibition exhibition = db.Exhibitions.Find(id);
             if (exhibition == null)
             {

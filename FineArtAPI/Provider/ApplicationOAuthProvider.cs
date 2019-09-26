@@ -7,7 +7,7 @@ using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
 using System.Web;
-
+using System.Web.Http.Cors;
 
 namespace InstituteFineArt.Provider
 {
@@ -28,10 +28,10 @@ namespace InstituteFineArt.Provider
         public override async Task GrantResourceOwnerCredentials
         (OAuthGrantResourceOwnerCredentialsContext context)
         {
+            User entry = new User();
             using (FineArtEntities fineArtEntities = new FineArtEntities())
             {
-
-                User entry = fineArtEntities.Users.Where
+                entry = fineArtEntities.Users.Where
                 <User>(u =>
                 u.Username == context.UserName &&
                 u.Password == context.Password).FirstOrDefault();
@@ -50,7 +50,7 @@ namespace InstituteFineArt.Provider
             ClaimsIdentity cookiesIdentity =
             new ClaimsIdentity(context.Options.AuthenticationType);
 
-            AuthenticationProperties properties = CreateProperties(context.UserName);
+            AuthenticationProperties properties = CreateProperties(entry.UserId);
             AuthenticationTicket ticket =
             new AuthenticationTicket(oAuthIdentity, properties);
             context.Validated(ticket);
@@ -96,12 +96,13 @@ namespace InstituteFineArt.Provider
             return Task.FromResult<object>(null);
         }
 
-        public static AuthenticationProperties CreateProperties(string userName)
+        public static AuthenticationProperties CreateProperties(int userId)
         {
+            
             IDictionary<string, string>
             data = new Dictionary<string, string>
             {
-                { "userName", userName }
+                {"User id", userId.ToString() }
             };
             return new AuthenticationProperties(data);
         }

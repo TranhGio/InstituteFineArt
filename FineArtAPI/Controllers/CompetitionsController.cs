@@ -7,11 +7,13 @@ using System.Linq;
 using System.Net;
 using System.Net.Http;
 using System.Web.Http;
+using System.Web.Http.Cors;
 using System.Web.Http.Description;
 using FineArtAPI.Models;
 
 namespace FineArtAPI.Controllers
 {
+    [Authorize]
     public class CompetitionsController : ApiController
     {
         private FineArtEntities db = new FineArtEntities();
@@ -74,7 +76,8 @@ namespace FineArtAPI.Controllers
         [ResponseType(typeof(Competition))]
         public IHttpActionResult PostCompetition(Competition competition)
         {
-            if (!ModelState.IsValid)
+            User user = db.Users.Where(u => u.Username == User.Identity.Name).FirstOrDefault();
+            if (!ModelState.IsValid || user.RoleId != 3)
             {
                 return BadRequest(ModelState);
             }

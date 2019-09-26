@@ -7,14 +7,27 @@ using System.Linq;
 using System.Net;
 using System.Net.Http;
 using System.Web.Http;
+using System.Web.Http.Cors;
 using System.Web.Http.Description;
 using FineArtAPI.Models;
 
 namespace FineArtAPI.Controllers
 {
+    [Authorize]
     public class UsersController : ApiController
     {
         private FineArtEntities db = new FineArtEntities();
+        //GET: api/User/me
+        [Route("user/me")]
+        public IHttpActionResult getUser()
+        {
+            User user = db.Users.Where(u => u.Username == User.Identity.Name).FirstOrDefault();
+            if (user == null)
+            {
+                return NotFound();
+            }
+            return Ok(user);
+        }
 
         // GET: api/Users
         public IQueryable<User> GetUsers()
@@ -26,6 +39,11 @@ namespace FineArtAPI.Controllers
         [ResponseType(typeof(User))]
         public IHttpActionResult GetUser(int id)
         {
+            User userIdentity = db.Users.Where(u => u.Username == User.Identity.Name).FirstOrDefault();
+            if (userIdentity.RoleId == 4)
+            {
+                BadRequest();
+            }
             User user = db.Users.Find(id);
             if (user == null)
             {
@@ -39,7 +57,7 @@ namespace FineArtAPI.Controllers
         [ResponseType(typeof(void))]
         public IHttpActionResult PutUser(int id, User user)
         {
-            if (!ModelState.IsValid)
+            if (!ModelState.IsValid || user.RoleId == 1)
             {
                 return BadRequest(ModelState);
             }
@@ -74,11 +92,11 @@ namespace FineArtAPI.Controllers
         [ResponseType(typeof(User))]
         public IHttpActionResult PostUser(User user)
         {
-            if (!ModelState.IsValid)
+            User userIdentity = db.Users.Where(u => u.Username == User.Identity.Name).FirstOrDefault();
+            if (!ModelState.IsValid || userIdentity.RoleId != 1)
             {
                 return BadRequest(ModelState);
             }
-
             db.Users.Add(user);
             db.SaveChanges();
 
