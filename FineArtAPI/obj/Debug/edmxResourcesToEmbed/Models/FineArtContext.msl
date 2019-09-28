@@ -13,6 +13,7 @@
     <EntitySetMapping Name="Competitions">
       <EntityTypeMapping TypeName="FineArtModel.Competition">
         <MappingFragment StoreEntitySet="Competitions">
+          <ScalarProperty Name="Descriptions" ColumnName="Descriptions" />
           <ScalarProperty Name="CompetitionId" ColumnName="CompetitionId" />
           <ScalarProperty Name="CompetitionName" ColumnName="CompetitionName" />
           <ScalarProperty Name="StartDate" ColumnName="StartDate" />

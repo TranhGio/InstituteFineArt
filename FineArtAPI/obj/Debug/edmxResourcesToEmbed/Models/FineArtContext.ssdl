@@ -14,6 +14,7 @@
     </Key>
     <Property Name="CompetitionId" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
     <Property Name="CompetitionName" Type="varchar" MaxLength="50" Nullable="false" />
+    <Property Name="Descriptions" Type="varchar" MaxLength="1000" />
     <Property Name="StartDate" Type="date" Nullable="false" />
     <Property Name="EndDate" Type="date" Nullable="false" />
     <Property Name="UserId" Type="int" Nullable="false" />

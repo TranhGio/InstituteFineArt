@@ -4,7 +4,7 @@
   <edmx:Runtime>
     <!-- SSDL content -->
     <edmx:StorageModels>
-      <Schema Namespace="FineArtModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+    <Schema Namespace="FineArtModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
         <EntityType Name="Awards">
           <Key>
             <PropertyRef Name="AwardId" />
@@ -19,6 +19,7 @@
           </Key>
           <Property Name="CompetitionId" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
           <Property Name="CompetitionName" Type="varchar" MaxLength="50" Nullable="false" />
+          <Property Name="Descriptions" Type="varchar" MaxLength="1000" />
           <Property Name="StartDate" Type="date" Nullable="false" />
           <Property Name="EndDate" Type="date" Nullable="false" />
           <Property Name="UserId" Type="int" Nullable="false" />
@@ -175,8 +176,7 @@
             <End Role="Users" EntitySet="Users" />
           </AssociationSet>
         </EntityContainer>
-      </Schema>
-    </edmx:StorageModels>
+      </Schema></edmx:StorageModels>
     <!-- CSDL content -->
     <edmx:ConceptualModels>
       <Schema Namespace="FineArtModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
@@ -201,6 +201,7 @@
           <Property Name="AwardId" Type="Int32" Nullable="false" />
           <NavigationProperty Name="Award" Relationship="Self.FK_Competitions_Awards" FromRole="Competitions" ToRole="Awards" />
           <NavigationProperty Name="Postings" Relationship="Self.FK_Postings_Competitions" FromRole="Competitions" ToRole="Postings" />
+          <Property Name="Descriptions" Type="String" MaxLength="1000" FixedLength="false" Unicode="false" />
         </EntityType>
         <EntityType Name="Exhibition">
           <Key>
@@ -345,6 +346,7 @@
           <EntitySetMapping Name="Competitions">
             <EntityTypeMapping TypeName="FineArtModel.Competition">
               <MappingFragment StoreEntitySet="Competitions">
+                <ScalarProperty Name="Descriptions" ColumnName="Descriptions" />
                 <ScalarProperty Name="CompetitionId" ColumnName="CompetitionId" />
                 <ScalarProperty Name="CompetitionName" ColumnName="CompetitionName" />
                 <ScalarProperty Name="StartDate" ColumnName="StartDate" />

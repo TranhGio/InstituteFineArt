@@ -26,6 +26,7 @@ namespace FineArtAPI.Models
         public System.DateTime EndDate { get; set; }
         public int UserId { get; set; }
         public int AwardId { get; set; }
+        public string Descriptions { get; set; }
     
         public virtual Award Award { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]

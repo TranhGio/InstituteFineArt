@@ -18,7 +18,6 @@ namespace FineArtAPI.Models
         public FineArtEntities()
             : base("name=FineArtEntities")
         {
-            this.Configuration.ProxyCreationEnabled = false;
         }
     
         protected override void OnModelCreating(DbModelBuilder modelBuilder)

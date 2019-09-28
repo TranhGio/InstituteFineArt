@@ -21,6 +21,7 @@
     <Property Name="AwardId" Type="Int32" Nullable="false" />
     <NavigationProperty Name="Award" Relationship="Self.FK_Competitions_Awards" FromRole="Competitions" ToRole="Awards" />
     <NavigationProperty Name="Postings" Relationship="Self.FK_Postings_Competitions" FromRole="Competitions" ToRole="Postings" />
+    <Property Name="Descriptions" Type="String" MaxLength="1000" FixedLength="false" Unicode="false" />
   </EntityType>
   <EntityType Name="Exhibition">
     <Key>

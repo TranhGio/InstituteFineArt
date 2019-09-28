@@ -28,13 +28,28 @@ namespace FineArtAPI.Controllers
         [ResponseType(typeof(Exhibition))]
         public IHttpActionResult GetExhibition(int id)
         {
-            Exhibition exhibition = db.Exhibitions.Find(id);
-            if (exhibition == null)
+            var competition = (from p in db.Competitions
+                               join e in db.Awards
+                                  on p.AwardId equals e.AwardId
+                               join u in db.Users
+                                 on p.UserId equals u.UserId
+                               where p.CompetitionId == id
+                               select new
+                               {
+                                   Award = e,
+                                   p.AwardId,
+                                   p.CompetitionId,
+                                   p.CompetitionName,
+                                   p.StartDate,
+                                   p.EndDate,
+                                   User = u
+                               }).First();
+            if (competition == null)
             {
                 return NotFound();
             }
 
-            return Ok(exhibition);
+            return Ok(competition);
         }
 
         // PUT: api/Exhibitions/5
