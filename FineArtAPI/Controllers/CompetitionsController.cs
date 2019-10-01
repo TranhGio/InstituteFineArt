@@ -29,28 +29,66 @@ namespace FineArtAPI.Controllers
         public IHttpActionResult GetCompetition(int id)
         {
             Competition competition = db.Competitions.Find(id);
+            Award award = db.Awards.Where(a => a.AwardId == competition.AwardId).FirstOrDefault();
+            User user = db.Users.Where(u => u.Username == User.Identity.Name).FirstOrDefault();
+            var userHasPosting = (from c in db.Competitions
+                           join p in db.Postings
+                             on c.CompetitionId equals p.CompetitionId
+                           join u in db.Users
+                             on p.UserId equals u.UserId
+                           where u.UserId == user.UserId && c.CompetitionId == competition.CompetitionId
+                           select u).FirstOrDefault();
+            Posting posting = db.Postings.Where(p => p.CompetitionId == competition.CompetitionId).FirstOrDefault();
+            if (userHasPosting != null)
+            {
+                return Ok(new
+                {
+                    AwardName = award.AwardName,
+                    AwardDetail = award.AwardDetail,
+                    CompetitionId = competition.CompetitionId,
+                    CompetitionName = competition.CompetitionName,
+                    Descriptions = competition.Descriptions,
+                    StartDate = competition.StartDate,
+                    EndDate = competition.EndDate,
+                    UserId = competition.UserId,
+                    isUserHavePosting = true,
+                    PostingId = posting.PostingId
+                });
+            }
             if (competition == null)
             {
                 return NotFound();
             }
 
-            return Ok(competition);
+            return Ok(new {
+                CompetitionId = competition.CompetitionId,
+                CompetitionName = competition.CompetitionName,
+                Descriptions = competition.Descriptions,
+                StartDate = competition.StartDate,
+                EndDate = competition.EndDate,
+                UserId = competition.UserId,
+                isUserHavePosting = false,
+                AwardName = award.AwardName,
+                AwardDetail = award.AwardDetail,
+
+            });
         }
 
         // PUT: api/Competitions/5
         [ResponseType(typeof(void))]
         public IHttpActionResult PutCompetition(int id, Competition competition)
         {
+            User user = db.Users.Where(u => u.Username == User.Identity.Name).FirstOrDefault();
+            
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
             }
-
-            if (id != competition.CompetitionId)
+            
+            if (id != competition.CompetitionId || user.UserId != competition.UserId || user.RoleId != 3)
             {
                 return BadRequest();
             }
-
             db.Entry(competition).State = EntityState.Modified;
 
             try
@@ -81,7 +119,7 @@ namespace FineArtAPI.Controllers
             {
                 return BadRequest(ModelState);
             }
-
+            competition.UserId = user.UserId;
             db.Competitions.Add(competition);
             db.SaveChanges();
 

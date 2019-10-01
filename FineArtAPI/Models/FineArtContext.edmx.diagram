@@ -4,13 +4,13 @@
   <edmx:Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
     <!-- Diagram content (shape and connector positions) -->
     <edmx:Diagrams>
-      <Diagram DiagramId="994c6cbc8a9343dfa0353853b8168e1b" Name="Diagram1">
+      <Diagram DiagramId="994c6cbc8a9343dfa0353853b8168e1b" Name="Diagram1" ZoomLevel="74">
         <EntityTypeShape EntityType="FineArtModel.Award" Width="1.5" PointX="0.75" PointY="1.625" IsExpanded="true" />
         <EntityTypeShape EntityType="FineArtModel.Competition" Width="1.5" PointX="3" PointY="1.25" IsExpanded="true" />
         <EntityTypeShape EntityType="FineArtModel.Exhibition" Width="1.5" PointX="3" PointY="4.875" IsExpanded="true" />
         <EntityTypeShape EntityType="FineArtModel.Posting" Width="1.5" PointX="5.25" PointY="1" IsExpanded="true" />
-        <EntityTypeShape EntityType="FineArtModel.Role" Width="1.5" PointX="0.75" PointY="7.75" IsExpanded="true" />
-        <EntityTypeShape EntityType="FineArtModel.User" Width="1.5" PointX="3" PointY="7.25" IsExpanded="true" />
+        <EntityTypeShape EntityType="FineArtModel.Role" Width="1.5" PointX="9.5" PointY="4.375" IsExpanded="true" />
+        <EntityTypeShape EntityType="FineArtModel.User" Width="1.5" PointX="7" PointY="4.75" IsExpanded="true" />
         <AssociationConnector Association="FineArtModel.FK_Competitions_Awards" ManuallyRouted="false" />
         <AssociationConnector Association="FineArtModel.FK_Postings_Competitions" ManuallyRouted="false" />
         <AssociationConnector Association="FineArtModel.FK_Postings_Users1" ManuallyRouted="false" />

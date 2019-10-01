@@ -22,7 +22,7 @@ namespace FineArtAPI.Controllers
             User user = db.Users.Where(u => u.Username == User.Identity.Name).FirstOrDefault();
             if (user.RoleId != 4)
             {
-                return Request.CreateResponse(HttpStatusCode.BadRequest, "Only student");
+                return Request.CreateResponse(HttpStatusCode.BadRequest, "Only student can upload paint");
             }
             Dictionary<string, object> dict = new Dictionary<string, object>();
             try
@@ -43,7 +43,7 @@ namespace FineArtAPI.Controllers
                         var extension = ext.ToLower();
                         if (!AllowedFileExtensions.Contains(extension))
                         {
-                            var message = string.Format("Please Upload image of type .jpg,.gif,.png.");
+                            var message = string.Format("Please Upload image of type .jpg, .gif, .png.");
                             dict.Add("error", message);
                             return Request.CreateResponse(HttpStatusCode.BadRequest, dict);
                         }
@@ -55,7 +55,7 @@ namespace FineArtAPI.Controllers
                         }
                         else
                         {
-                            var filePath = HttpContext.Current.Server.MapPath("~/Image/" + postedFile.FileName + extension);
+                            var filePath = HttpContext.Current.Server.MapPath("~/Image/" + postedFile.FileName);
                             if (File.Exists(filePath))
                             {
                                 String message = "File name already exists!!! Please choose another name";
@@ -64,7 +64,7 @@ namespace FineArtAPI.Controllers
                             postedFile.SaveAs(filePath);
                         }
                     }
-                    return Request.CreateErrorResponse(HttpStatusCode.Created, postedFile.FileName); ;
+                    return Request.CreateErrorResponse(HttpStatusCode.Created, postedFile.FileName);
                 }
                 var res = string.Format("Please Upload a image.");
                 dict.Add("error", res);

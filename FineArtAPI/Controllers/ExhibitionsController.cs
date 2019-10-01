@@ -98,7 +98,6 @@ namespace FineArtAPI.Controllers
             {
                 return BadRequest(ModelState);
             }
-
             db.Exhibitions.Add(exhibition);
             db.SaveChanges();
 

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Data;
 using System.Data.Entity;
@@ -19,9 +20,10 @@ namespace FineArtAPI.Controllers
         private FineArtEntities db = new FineArtEntities();
 
         // GET: api/Postings
-        public IQueryable<Posting> GetPostings()
+        public IHttpActionResult GetPostings()
         {
-            return db.Postings;
+            
+            return Ok(db.Postings);
         }
 
         // GET: api/Postings/5
@@ -29,31 +31,67 @@ namespace FineArtAPI.Controllers
         public IHttpActionResult GetPosting(int id)
         {
             Posting posting = db.Postings.Find(id);
+            Competition competition = db.Competitions.Where(c => c.CompetitionId == posting.CompetitionId).FirstOrDefault();
+            User user = db.Users.Where(u => u.UserId == posting.UserId).FirstOrDefault();
             if (posting == null)
             {
                 return NotFound();
             }
 
-            return Ok(posting);
+            return Ok(new {
+                CompetitionId = competition.CompetitionId,
+                CompetitionName=competition.CompetitionName,
+                AwardId=competition.AwardId,
+                Descriptions = competition.Descriptions,
+                StartDate = competition.StartDate,
+                EndDate= competition.EndDate,
+
+                PostingId = posting.PostingId,
+                Mark = posting.Mark,
+                Quote = posting.Quote,
+                LastEdit = posting.LastEdit,
+                ImagePath = posting.ImagePath,
+                PostingUserId = posting.UserId,
+                UserNameCreatePosting = user.Username
+            });
         }
 
         // PUT: api/Postings/5
         [ResponseType(typeof(void))]
-        public IHttpActionResult PutPosting(int id, Posting posting)
+        public IHttpActionResult PutPosting([FromUri]int id, [FromBody]Posting posting)
         {
-            User user = db.Users.Where(u => u.Username == User.Identity.Name).FirstOrDefault();
-            if (!ModelState.IsValid || user.UserId != 4)
+            if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
             }
-
-            if (id != posting.PostingId)
+            User user = db.Users.Where(u => u.Username == User.Identity.Name).FirstOrDefault();
+            Competition competition = db.Competitions.Where(c => c.CompetitionId == posting.CompetitionId).FirstOrDefault();
+            Posting postingDB = db.Postings.Where(p => p.PostingId == id).FirstOrDefault();
+            Posting postingSubmit = new Posting();
+            postingSubmit = postingDB;
+            switch (user.RoleId)
             {
-                return BadRequest();
+                case 3:
+                    //TODO teacher
+                    if (user.UserId != competition.UserId)
+                    {
+                        return BadRequest();
+                    }
+                    postingSubmit.Mark = posting.Mark;
+                    break;
+                case 4:
+                    //TODO student
+                    if(user.UserId != postingDB.UserId)
+                    {
+                        return BadRequest();
+                    }
+                    postingSubmit.ImagePath = posting.ImagePath;
+                    postingSubmit.Quote = posting.Quote;
+                    break;
+                default:
+                    return BadRequest();
             }
-
-            db.Entry(posting).State = EntityState.Modified;
-
+            db.Entry(postingSubmit).State = EntityState.Modified;
             try
             {
                 db.SaveChanges();
@@ -82,11 +120,16 @@ namespace FineArtAPI.Controllers
             {
                 return BadRequest(ModelState);
             }
-
+            posting.UserId = user.UserId;
+            posting.LastEdit = DateTime.Now;
+            int intIdt = db.Users.Max(u => u.UserId);
+            posting.PostingId = intIdt + 1;
+            posting.isActive = true;
+            posting.Mark = 0;
             db.Postings.Add(posting);
             db.SaveChanges();
 
-            return CreatedAtRoute("DefaultApi", new { id = posting.PostingId }, posting);
+            return Ok(posting.PostingId);
         }
 
         // DELETE: api/Postings/5
@@ -103,9 +146,7 @@ namespace FineArtAPI.Controllers
             {
                 return NotFound();
             }
-            
-            posting.isActive = false;
-            //db.Postings.Remove(posting);
+            db.Postings.Remove(posting);
             db.SaveChanges();
             return Ok(posting);
         }
