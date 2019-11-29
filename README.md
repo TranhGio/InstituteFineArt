@@ -1,3 +1,3 @@
 # Institute Fine Art
-Web API project using .Net Framework\n
+Web API project using .Net Framework.
 Server side
